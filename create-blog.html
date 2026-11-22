@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Blog - My Blog</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Create Your Blog</h1>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Write a New Blog Post</h2>
+
+        <form id="blogForm">
+
+            <input type="text"
+                   id="blogTitle"
+                   placeholder="Enter Blog Title"
+                   required>
+
+            <br><br>
+
+            <textarea id="blogContent"
+                      placeholder="Write your blog here..."
+                      rows="8"
+                      required></textarea>
+
+            <br><br>
+
+            <button type="submit">Publish Blog</button>
+
+        </form>
+
+        <p id="blogMessage"></p>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

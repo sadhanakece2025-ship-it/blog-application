@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f6ff;
+    color: #222;
+}
+
+header {
+    background: #234b8a;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+nav {
+    margin-top: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 10px;
+}
+
+main {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+button, main a {
+    background: #234b8a;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+/* FORM DESIGN */
+
+input, textarea {
+    width: 80%;
+    max-width: 400px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+}
+
+form {
+    margin: 20px auto;
+}
+
+/* BLOG POST DESIGN */
+
+#postsContainer article {
+    background: white;
+    padding: 20px;
+    margin: 15px auto;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px #00000015;
+    text-align: left;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 600px) {
+
+    header {
+        padding: 15px 8px;
+    }
+
+    nav a {
+        display: inline-block;
+        margin: 7px;
+        font-size: 14px;
+    }
+
+    main {
+        padding: 30px 12px;
+    }
+
+    input, textarea {
+        width: 100%;
+    }
+
+    button {
+        width: 80%;
+    }
+}
