@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Blog Details</h1>
+        <a href="dashboard.html">Back to Dashboard</a>
+    </header>
+
+    <main id="blogDetails">
+        <p>Loading blog...</p>
+    </main>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const blogId = params.get('id');
+
+        async function loadBlog() {
+            const container = document.getElementById('blogDetails');
+
+            if (!blogId) {
+                container.innerHTML = '<p>Blog ID is missing.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/blogs/' + encodeURIComponent(blogId));
+                const blog = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(blog.message || 'Blog not found');
+                }
+
+                container.innerHTML = `
+                    <h2>${escapeHTML(blog.title)}</h2>
+                    <p>${escapeHTML(blog.content)}</p>
+                    <p>Author: ${escapeHTML(blog.author)}</p>
+                `;
+            } catch (error) {
+                container.textContent = error.message;
+            }
+        }
+
+        function escapeHTML(value) {
+            const div = document.createElement('div');
+            div.textContent = value || '';
+            return div.innerHTML;
+        }
+
+        loadBlog();
+    </script>
+
+</body>
+</html>

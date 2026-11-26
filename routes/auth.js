@@ -1,25 +1,73 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
+const User = require('../models/User');
 
 const router = express.Router();
 
-// User Registration API
-router.post('/register', (req, res) => {
-    const { name, email, password } = req.body;
+// User Registration
+router.post('/register', async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
 
-    res.json({
-        message: 'User registration successful',
-        user: { name, email }
-    });
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({
+                message: 'User already exists'
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword
+        });
+
+        await newUser.save();
+
+        res.status(201).json({
+            message: 'Registration successful'
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Registration failed' });
+    }
 });
 
-// User Login API
-router.post('/login', (req, res) => {
-    const { email, password } = req.body;
+// User Login
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
-    res.json({
-        message: 'User login successful',
-        email: email
-    });
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({
+                message: 'Invalid email or password'
+            });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(400).json({
+                message: 'Invalid email or password'
+            });
+        }
+
+        res.json({
+            message: 'Login successful',
+            user: {
+                name: user.name,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Login failed' });
+    }
 });
 
 module.exports = router;

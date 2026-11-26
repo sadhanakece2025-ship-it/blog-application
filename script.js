@@ -20,7 +20,8 @@ if (loginForm) {
             const data = await response.json();
             document.getElementById("loginMessage").innerText = data.message;
         } catch (error) {
-            document.getElementById("loginMessage").innerText = "Server connection failed.";
+            document.getElementById("loginMessage").innerText =
+                "Server connection failed.";
         }
     });
 }
@@ -46,7 +47,8 @@ if (registerForm) {
             const data = await response.json();
             document.getElementById("registerMessage").innerText = data.message;
         } catch (error) {
-            document.getElementById("registerMessage").innerText = "Server connection failed.";
+            document.getElementById("registerMessage").innerText =
+                "Server connection failed.";
         }
     });
 }
@@ -65,14 +67,22 @@ if (blogForm) {
             const response = await fetch(`${API_URL}/api/blogs/create`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title, content, author: "User" })
+                body: JSON.stringify({
+                    title,
+                    content,
+                    author: "User"
+                })
             });
 
             const data = await response.json();
             document.getElementById("blogMessage").innerText = data.message;
-            blogForm.reset();
+
+            if (response.ok) {
+                blogForm.reset();
+            }
         } catch (error) {
-            document.getElementById("blogMessage").innerText = "Server connection failed.";
+            document.getElementById("blogMessage").innerText =
+                "Server connection failed.";
         }
     });
 }
@@ -82,29 +92,42 @@ const postsContainer = document.getElementById("postsContainer");
 
 if (postsContainer) {
     fetch(`${API_URL}/api/blogs`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to load blogs");
+            }
+            return response.json();
+        })
         .then(data => {
             postsContainer.innerHTML = "";
 
-            if (data.blogs.length === 0) {
+            if (!data.blogs || data.blogs.length === 0) {
                 postsContainer.innerHTML = "<p>No blog posts yet.</p>";
                 return;
             }
 
             data.blogs.forEach(post => {
                 const article = document.createElement("article");
+
                 const heading = document.createElement("h3");
                 heading.textContent = post.title;
 
                 const paragraph = document.createElement("p");
                 paragraph.textContent = post.content;
 
+                const link = document.createElement("a");
+                link.href = `blog-details.html?id=${encodeURIComponent(post._id)}`;
+                link.textContent = "View Details";
+
                 article.appendChild(heading);
                 article.appendChild(paragraph);
+                article.appendChild(link);
+
                 postsContainer.appendChild(article);
             });
         })
-        .catch(() => {
+        .catch(error => {
+            console.error(error);
             postsContainer.innerText = "Could not load blogs.";
         });
 }
